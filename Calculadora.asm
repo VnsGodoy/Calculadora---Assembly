@@ -1,5 +1,4 @@
-TITTLE CALCULADORA EM ASSEMBLY x86
- 
+
 .MODEL small
 .DATA
 
@@ -21,10 +20,10 @@ Final2 DB '-> $'
 ;Função apenas para estética
 FinalEst PROC
 
-MOV DX, Final
+LEA DX, Final
 MOV AH, 09
 CALL PULA_LINHA
-MOV DX, Final2
+LEA DX, Final2
 MOV AH, 09
 
 FinalEst ENDP
@@ -145,7 +144,7 @@ SOMAOP:
 CALL FinalEst
 CALL SOMA
 MOV DL, BL
-MOV AH, 02  ;Printa o Resultado
+MOV AH, 09  ;Printa o Resultado
 INT 21H
 JMP FIM ;Pula para o final do Programa
 
@@ -154,7 +153,7 @@ SUBOP:
 CALL FinalEst
 CALL SUBI
 MOV DL, BL
-MOV AH, 02  ;Printa o Resultado
+MOV AH, 09  ;Printa o Resultado
 INT 21H
 JMP FIM ;Pula para o final do Programa
 
