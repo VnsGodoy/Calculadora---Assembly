@@ -6,4 +6,4 @@ SEM UTILIZAR as funções MULT E DIV:
 -> Subtração
 -> Divisão
 -> Multiplicação
-#Obs.: Caso queira utilizar o código, sugiro que abra no Visual Code Studio com a extenção MASM/TASM.
+# Obs.: Caso queira utilizar o código, sugiro que abra no Visual Code Studio com a extenção MASM/TASM.
