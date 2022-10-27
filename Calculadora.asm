@@ -135,9 +135,9 @@ MOV AH, 01
 INT 21H
 
 ;Comparando o sinal digitado:
-CMP AL, 
+CMP AL, 43  ;Sinal de '+'
 JE SOMAOP
-CMP AL, 
+CMP AL, 45  ;Sinal de '-'
 JE SUBOP
 
 ;Função feita para chamar Operação Soma e Printar
