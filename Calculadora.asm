@@ -1,5 +1,5 @@
 TITTLE CALCULADORA EM ASSEMBLY x86
-
+ 
 .MODEL small
 .DATA
 
@@ -13,8 +13,21 @@ MSG2 DB ' -> Digite o segundo numero: $'
 MSG3 DB ' -> Digite o sinal que deseja: $'
 OP1 DB ?,'$'
 OP2 DB ?,'$'
+Final DB '===== < Resultado > ===== $'
+Final2 DB '-> $'
 
 .CODE
+
+;Função apenas para estética
+FinalEst PROC
+
+MOV DX, Final
+MOV AH, 09
+CALL PULA_LINHA
+MOV DX, Final2
+MOV AH, 09
+
+FinalEst ENDP
 
 ;Função Print Pula-Linha
 PULA_LINHA PROC 
@@ -129,6 +142,7 @@ JE SUBOP
 
 ;Função feita para chamar Operação Soma e Printar
 SOMAOP:
+CALL FinalEst
 CALL SOMA
 MOV DL, BL
 MOV AH, 02  ;Printa o Resultado
@@ -137,6 +151,7 @@ JMP FIM ;Pula para o final do Programa
 
 ;Função feita para chamar Operação Subi e Printar
 SUBOP:
+CALL FinalEst
 CALL SUBI
 MOV DL, BL
 MOV AH, 02  ;Printa o Resultado
