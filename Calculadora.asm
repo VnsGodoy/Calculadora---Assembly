@@ -22,9 +22,8 @@ FinalEst PROC
 
 LEA DX, Final
 MOV AH, 09
-CALL PULA_LINHA
-LEA DX, Final2
-MOV AH, 09
+
+RET
 
 FinalEst ENDP
 
@@ -46,7 +45,7 @@ SUB BL, 30H  ;Transforma o número em caracter da Tabela ASCII
 MOV BH, OP2  ;Move o conteúdo de OP2 para o Registrador, pois é nescessário para realizar a operação
 SUB BH, 30H  ;Transforma o número em caracter da Tabela ASCII
 ADD BL, BH   ;Faz a operação de Soma dos dois números
-SUB BL, 30H  ;Transforma o número em caracter da Tabela ASCII
+ADD BL, 30H  ;Transforma o número em caracter da Tabela ASCII
 RET          ;Retorna
 
 SOMA ENDp
@@ -59,7 +58,7 @@ SUB BL, 30H
 MOV BH, OP2
 SUB BH, 30H
 SUB BL, BH   ;Faz a operação de Subitração dos dois números
-SUB BL, 30H
+ADD BL, 30H
 RET
 
 SUBI ENDP
@@ -144,7 +143,7 @@ SOMAOP:
 CALL FinalEst
 CALL SOMA
 MOV DL, BL
-MOV AH, 09  ;Printa o Resultado
+MOV AH, 02  ;Printa o Resultado
 INT 21H
 JMP FIM ;Pula para o final do Programa
 
@@ -153,7 +152,7 @@ SUBOP:
 CALL FinalEst
 CALL SUBI
 MOV DL, BL
-MOV AH, 09  ;Printa o Resultado
+MOV AH, 02  ;Printa o Resultado
 INT 21H
 JMP FIM ;Pula para o final do Programa
 
