@@ -1,4 +1,3 @@
-
 .MODEL small
 .DATA
 
@@ -12,18 +11,21 @@ MSG2 DB ' -> Digite o segundo numero: $'
 MSG3 DB ' -> Digite o sinal que deseja: $'
 OP1 DB ?,'$'
 OP2 DB ?,'$'
-Final DB '===== < Resultado > ===== $'
-Final2 DB '-> $'
+Final DB '-> Resultado: $'
 
 .CODE
 
 ;Função apenas para estética
 FinalEst PROC
 
+MOV DL, 10
+MOV AH, 02
+INT 21H
+INT 21H
+
 LEA DX, Final
 MOV AH, 09
-
-RET
+INT 21H
 
 FinalEst ENDP
 
