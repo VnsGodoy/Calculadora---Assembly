@@ -1,3 +1,4 @@
+TITLE CALCULADORA ASSEMBLY
 .MODEL small
 .DATA
 
@@ -8,7 +9,7 @@ BV DB ' -> Bem-vindo a calculadora em Assemlby, siga os passos para utiliza-la! 
 Baixo DB '   _________________________________________________________________ $'
 MSG1 DB ' -> Digite o primeiro numero: $'
 MSG2 DB ' -> Digite o segundo numero: $'
-MSG3 DB ' -> Digite o sinal que deseja: $'
+MSG3 DB ' -> Digite a operacao que deseja: $'
 OP1 DB ?,'$'
 OP2 DB ?,'$'
 Final DB '-> Resultado: $'
