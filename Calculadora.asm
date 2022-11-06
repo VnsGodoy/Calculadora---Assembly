@@ -1,4 +1,4 @@
-TITLE CALCULADORA ASSEMBLY
+TITLE Calculadora Assembly 
 .MODEL small
 .DATA
 
@@ -15,6 +15,18 @@ OP2 DB ?,'$'
 Final DB '-> Resultado: $'
 
 .CODE
+
+
+MAIN PROC
+
+CALL INICIO
+
+CALL COMPARE
+
+CALL SOMAESUBI
+
+MAIN ENDP
+
 
 ;Função apenas para estética
 FinalEst PROC
@@ -53,20 +65,22 @@ RET          ;Retorna
 
 SOMA ENDp
 
-;Função que faz a operação de subitração da calculadora
+;Função que faz a operação de subtração da calculadora
 SUBI PROC
 
 MOV BL, OP1
 SUB BL, 30H
 MOV BH, OP2
 SUB BH, 30H
-SUB BL, BH   ;Faz a operação de Subitração dos dois números
+SUB BL, BH   ;Faz a operação de Subtração dos dois números
 ADD BL, 30H
 RET
 
 SUBI ENDP
 
-MAIN PROC
+;Função de mensagens e armazenamento dos valores
+INICIO PROC
+
 ;Começa o Programa
 MOV AX,@DATA
 MOV DS, AX
@@ -135,11 +149,22 @@ INT 21H
 MOV AH, 01
 INT 21H
 
+INICIO ENDP
+
+;Função de compare para designar soma ou sub
+COMPARE PROC
+
 ;Comparando o sinal digitado:
 CMP AL, 43  ;Sinal de '+'
 JE SOMAOP
 CMP AL, 45  ;Sinal de '-'
 JE SUBOP
+
+
+COMPARE ENDP
+
+;Função que contém os procedimentos de soma, sub e encerra o programa
+SOMAESUBI PROC
 
 ;Função feita para chamar Operação Soma e Printar
 SOMAOP:
@@ -164,5 +189,7 @@ FIM:
 
 MOV AH, 4CH  ;Finaliza o Programa
 INT 21H
-MAIN ENDP
+
+SOMAESUBI ENDP
+
 END MAIN
