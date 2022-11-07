@@ -1,4 +1,4 @@
-TITLE VINÍCIUS DE GODOY (22006132) e VICTOR ARONI ()
+TITLE VINÍCIUS DE GODOY (22006132) e VICTOR ARONI (22000397)
 
 .MODEL small
 .DATA
@@ -18,7 +18,6 @@ TITLE VINÍCIUS DE GODOY (22006132) e VICTOR ARONI ()
     NumZero DB 'Digite um numero diferente de zero para divisao, por favor! $'
 
 .CODE
-
 
 ;Limpa tela
 LimpaTELA PROC
@@ -88,7 +87,8 @@ SOMA PROC
     ADD BL, 30H  ;Transforma o número em caracter da Tabela ASCII
     RET          ;Retorna
 
-SOMA ENDp
+ 
+SOMA ENDP
 
 
 ;Função que faz a operação de subtração da calculadora
@@ -128,10 +128,10 @@ MULT PROC
         ADD BL, 30H
         CALL DECIMAL
         RET
+MULT ENDP
 
-MULT ENDp
 
-
+;Função que faz operação de divisão da calculadora sem ultilizar o comando DIV
 DIVI PROC
 
     MOV BL, OP1
@@ -166,9 +166,10 @@ DIVI PROC
 
         RET
 
-DIVI ENDp
+DIVI ENDP
 
 
+;Função com a opção de continuar ou encerrar o programa
 CONTINUA PROC
     
     CALL PULA_LINHA
