@@ -1,4 +1,4 @@
-TITLE Calculadora em Assembly
+TITLE VINÍCIUS DE GODOY (22006132) e VICTOR ARONI ()
 
 .MODEL small
 .DATA
@@ -13,21 +13,51 @@ TITLE Calculadora em Assembly
     MSG3 DB ' -> Digite o sinal que deseja: $'
     OP1 DB ?,'$'
     OP2 DB ?,'$'
-    Final DB '-> Resultado: $'
+    Final DB ' -> Resultado: $'
+    MensagemFinal DB 'Deseja fazer outra conta (S/N): $'
+    NumZero DB 'Digite um numero diferente de zero para divisao, por favor! $'
 
 .CODE
 
-;Função apenas para estética
-FinalEst PROC
-
+;Limpa tela
+LimpaTELA PROC
     MOV DL, 10
     MOV AH, 02
     INT 21H
     INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    RET
 
+LimpaTELA ENDP
+
+;Função apenas para estética
+FinalEst PROC
+
+    CALL PULA_LINHA
     LEA DX, Final
     MOV AH, 09
     INT 21H
+    RET
 
 FinalEst ENDP
 
@@ -38,22 +68,9 @@ PULA_LINHA PROC
     MOV AH, 02
     INT 21H
     INT 21H
+    RET
 
 PULA_LINHA ENDP
-
-;Função Print Pula-Linha para limpar a tela do programa no começo
-PULA_LINHA_INICIAL PROC
-
-MOV DL, 10
-MOV AH, 02
-INT 21H
-INT 21H
-INT 21H
-INT 21H
-INT 21H
-INT 21H
-
-PULA_LINHA_INICIAL ENDp
 
 ;Função que faz a operação de soma da calculadora
 SOMA PROC
@@ -85,10 +102,27 @@ SUBI ENDP
 MULT PROC
 
 MOV BL, OP1
-SUB BL, 30H
-MOV BH, OP2
-SUB BH, 30H
+SUB BL, 30H  
+MOV BH, OP2   
+SUB BH, 30H 
 
+Volta:
+
+SHR BL, 1  
+JNC PulaMult
+
+ADD CL, BH  
+
+PulaMult:
+
+SHL BH, 1 
+CMP BL, 0
+JNE Volta
+MOV BL, CL
+ADD BL, 30H
+CALL DECIMAL
+
+RET
 MULT ENDp
 
 
@@ -99,20 +133,71 @@ SUB BL, 30H
 MOV BH, OP2
 SUB BH, 30H
 
+CMP BH, 48
+JE Zero
+CMP BH, BL
+JE NumerosIguais
+
+SHR BL, 1
+JNC PulaDivi
+
+PulaDivi:
+
+
+
+
+NumerosIguais:
+XOR BX, BX
+MOV BL, 1
+CALL DECIMAL
+
+Zero:
+CALL LimpaTELA
+CALL PULA_LINHA
+LEA DX, NumZero
+MOV AH, 09
+INT 21H
+JMP DigiteNovamente
+
+
+RET
+
 DIVI ENDp
+
+CONTINUA PROC
+CALL PULA_LINHA
+LEA DX, MensagemFinal
+MOV AH, 09
+INT 21H
+
+XOR AX, AX
+XOR BX, BX
+XOR CX, CX
+XOR DX, DX
+
+MOV AH, 01
+INT 21H
+
+CMP AL, 'S'
+JE SIM
+CMP AL, 's'
+JE SIM
+RET
+
+CONTINUA ENDP
 
 ;Função que Printa 2 casas decimais no Resultado
 DECIMAL PROC
 
     XOR AX, AX  ;Zera Registrador AX
+    SUB BL, 30H 
     MOV AL, BL
-    SUB AH, 30H
-    MOV BL, 10
-    DIV BL      ;Sepera o número em 2 partes para Printar
+    MOV BL, 10 
+    DIV BL      ;Sepera o número em 2 partes para Printar 
 
-    MOV BX, AX
+    MOV BX, AX  
     MOV DL, BL  ;Primeira Parte do Número
-    ADD DL, 30H
+    ADD DL, 30H 
     MOV AH, 02
     INT 21H
 
@@ -127,9 +212,18 @@ DECIMAL PROC
 
 
 MAIN PROC
+SIM:
+
 ;Começa o Programa
 MOV AX,@DATA
 MOV DS, AX
+
+
+
+;Limpa tela
+CALL LimpaTELA
+CALL LimpaTELA
+
 
 ;Imprime uma mensagem
 LEA DX, Cima 
@@ -156,7 +250,7 @@ CALL PULA_LINHA ;Print Pula
 LEA DX, Baixo
 MOV AH, 09
 INT 21H
- 
+
 CALL PULA_LINHA ;Print Pula
 
 ;Pede o primeiro número
@@ -169,7 +263,9 @@ MOV AH, 01
 INT 21H
 
 ;Manda para a variável
-MOV OP1, AL 
+MOV OP1, AL
+
+DigiteNovamente:
 
 CALL PULA_LINHA ;Print Pula
 
@@ -223,20 +319,17 @@ JMP FIM ;Pula para o final do Programa
 MULTOP:
 CALL FinalEst
 CALL MULT
-CALL DECIMAL
 JMP FIM  ;Pula para o final do Programa
 
 ;Função feita para chamar Operação Divi e Printar
 DIVIOP:
 CALL FinalEst
 CALL DIVI
-MOV DL, BL
-MOV AH, 02   ;Printa o Resultado
-INT 21H
 JMP FIM   ;Pula para o final do Programa
 
 ;Final do Programa
 FIM:
+CALL CONTINUA
 
 MOV AH, 4CH  ;Finaliza o Programa
 INT 21H
