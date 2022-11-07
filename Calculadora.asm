@@ -1,43 +1,59 @@
+TITLE Calculadora em Assembly
+
 .MODEL small
 .DATA
 
 ;Estéticas e Variáveis:
-Cima DB '        ___________            $'
-Começo DB '===== < CALCULADORA > ===== $'
-BV DB ' -> Bem-vindo a calculadora em Assemlby, siga os passos para utiliza-la! <- $'
-Baixo DB '   _________________________________________________________________ $'
-MSG1 DB ' -> Digite o primeiro numero: $'
-MSG2 DB ' -> Digite o segundo numero: $'
-MSG3 DB ' -> Digite o sinal que deseja: $'
-OP1 DB ?,'$'
-OP2 DB ?,'$'
-Final DB '-> Resultado: $'
+    Cima DB '        ___________            $'
+    Começo DB '===== < CALCULADORA > ===== $'
+    BV DB ' -> Bem-vindo a calculadora em Assemlby, siga os passos para utiliza-la! <- $'
+    Baixo DB '   _________________________________________________________________ $'
+    MSG1 DB ' -> Digite o primeiro numero: $'
+    MSG2 DB ' -> Digite o segundo numero: $'
+    MSG3 DB ' -> Digite o sinal que deseja: $'
+    OP1 DB ?,'$'
+    OP2 DB ?,'$'
+    Final DB '-> Resultado: $'
 
 .CODE
 
 ;Função apenas para estética
 FinalEst PROC
 
-MOV DL, 10
-MOV AH, 02
-INT 21H
-INT 21H
+    MOV DL, 10
+    MOV AH, 02
+    INT 21H
+    INT 21H
 
-LEA DX, Final
-MOV AH, 09
-INT 21H
+    LEA DX, Final
+    MOV AH, 09
+    INT 21H
 
 FinalEst ENDP
 
 ;Função Print Pula-Linha
 PULA_LINHA PROC 
 
+    MOV DL, 10
+    MOV AH, 02
+    INT 21H
+    INT 21H
+
+PULA_LINHA ENDP
+
+;Função Print Pula-Linha para limpar a tela do programa no começo
+PULA_LINHA_INICIAL PROC
+
 MOV DL, 10
 MOV AH, 02
 INT 21H
 INT 21H
+INT 21H
+INT 21H
+INT 21H
+INT 21H
 
-PULA_LINHA ENDP
+PULA_LINHA_INICIAL ENDp
 
 ;Função que faz a operação de soma da calculadora
 SOMA PROC
@@ -52,18 +68,63 @@ RET          ;Retorna
 
 SOMA ENDp
 
-;Função que faz a operação de subitração da calculadora
+;Função que faz a operação de subtração da calculadora
 SUBI PROC
+
+MOV BL, OP1  ;Move o conteúdo de OP1 para o Registrador, pois é nescessário para realizar a operação
+SUB BL, 30H  ;Transforma o número em caracter da Tabela ASCII
+MOV BH, OP2  ;Move o conteúdo de OP2 para o Registrador, pois é nescessário para realizar a operação
+SUB BH, 30H  ;Transforma o número em caracter da Tabela ASCII
+SUB BL, BH   ;Faz a operação de Subitração dos dois números
+ADD BL, 30H  ;Transforma o número em caracter da Tabela ASCII
+RET          ;Retorna
+
+SUBI ENDP
+
+;Função que faz operação de multiplicação da calculadora sem ultilizar o comando MUL
+MULT PROC
 
 MOV BL, OP1
 SUB BL, 30H
 MOV BH, OP2
 SUB BH, 30H
-SUB BL, BH   ;Faz a operação de Subitração dos dois números
-ADD BL, 30H
-RET
 
-SUBI ENDP
+MULT ENDp
+
+
+DIVI PROC
+
+MOV BL, OP1
+SUB BL, 30H
+MOV BH, OP2
+SUB BH, 30H
+
+DIVI ENDp
+
+;Função que Printa 2 casas decimais no Resultado
+DECIMAL PROC
+
+    XOR AX, AX  ;Zera Registrador AX
+    MOV AL, BL
+    SUB AH, 30H
+    MOV BL, 10
+    DIV BL      ;Sepera o número em 2 partes para Printar
+
+    MOV BX, AX
+    MOV DL, BL  ;Primeira Parte do Número
+    ADD DL, 30H
+    MOV AH, 02
+    INT 21H
+
+    MOV DL, BH  ;Segunda Parte do Número
+    ADD DL, 30H
+    MOV AH, 02
+    INT 21H
+
+    RET
+
+    DECIMAL ENDP
+
 
 MAIN PROC
 ;Começa o Programa
@@ -139,24 +200,40 @@ CMP AL, 43  ;Sinal de '+'
 JE SOMAOP
 CMP AL, 45  ;Sinal de '-'
 JE SUBOP
+CMP AL, 42  ;Sinal de '*'
+JE MULTOP
+CMP AL, 47  ;Sinal de '/'
+JE DIVIOP
 
 ;Função feita para chamar Operação Soma e Printar
 SOMAOP:
 CALL FinalEst
 CALL SOMA
-MOV DL, BL
-MOV AH, 02  ;Printa o Resultado
-INT 21H
+CALL DECIMAL
 JMP FIM ;Pula para o final do Programa
 
 ;Função feita para chamar Operação Subi e Printar
 SUBOP:
 CALL FinalEst
 CALL SUBI
-MOV DL, BL
-MOV AH, 02  ;Printa o Resultado
-INT 21H
+CALL DECIMAL
 JMP FIM ;Pula para o final do Programa
+
+;Função feita para chamar Operação Mult e Printar
+MULTOP:
+CALL FinalEst
+CALL MULT
+CALL DECIMAL
+JMP FIM  ;Pula para o final do Programa
+
+;Função feita para chamar Operação Divi e Printar
+DIVIOP:
+CALL FinalEst
+CALL DIVI
+MOV DL, BL
+MOV AH, 02   ;Printa o Resultado
+INT 21H
+JMP FIM   ;Pula para o final do Programa
 
 ;Final do Programa
 FIM:
