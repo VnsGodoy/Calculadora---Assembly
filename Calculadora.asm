@@ -115,19 +115,21 @@ MULT PROC
 
     Volta:
 
-        SHR BL, 1  
-        JNC PulaMult
-        ADD CL, BH  
+    SHR BL, 1  
+    JNC PulaMult
+    ADD CL, BH  
 
     PulaMult:
 
-        SHL BH, 1 
-        CMP BL, 0
-        JNE Volta
-        MOV BL, CL
-        ADD BL, 30H
-        CALL DECIMAL
-        RET
+    SHL BH, 1 
+    CMP BL, 0
+    JNE Volta
+    MOV BL, CL
+    ADD BL, 30H
+    CALL DECIMAL
+    
+    RET
+    
 MULT ENDP
 
 
@@ -151,20 +153,20 @@ DIVI PROC
 
     NumerosIguais:
         
-        XOR BX, BX
-        MOV BL, 1
-        CALL DECIMAL
+    XOR BX, BX
+    MOV BL, 1
+    CALL DECIMAL
 
     Zero:
 
-        CALL LimpaTELA
-        CALL PULA_LINHA
-        LEA DX, NumZero
-        MOV AH, 09
-        INT 21H
-        JMP DigiteNovamente
+    CALL LimpaTELA
+    CALL PULA_LINHA
+    LEA DX, NumZero
+    MOV AH, 09
+    INT 21H
+    JMP DigiteNovamente
 
-        RET
+    RET
 
 DIVI ENDP
 
